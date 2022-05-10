@@ -1,12 +1,14 @@
 <template>
 <div id="app">
 
-    <Task v-bind:tasks="tasks"></Task>
+   <router-view> </router-view>
+   <Task v-bind:tasks="tasks"></Task>
+   
 </div>
 </template>
 
 <script>
-import Task from "./components/Task"
+import Task from './components/Task'
 
 export default {
     name: "App",

@@ -1,95 +1,99 @@
 <template>
-  <div class="container">
-    <div class="task">
-      <!-- title -->
-      <div class="title">
-        <h1>To Do List</h1>
-      </div>
-      <!-- form -->
-      <div class="form">
-        <input
-          type="text"
-          placeholder="New Task"
-          v-model="newTask"
-          @keyup.enter="addTask"
-        />
-        <button @click="addTask"><i class="fas fa-plus"></i></button>
-      </div>
-      <!-- task lists -->
-      <div class="taskItems">
-        <ul>
-          <task-item
-            v-bind:task="task"
-            v-for="(task, index) in tasks"
-            :key="task.id"
-            @remove="removeTask(index)"
-            @complete="completeTask(task)"
-          ></task-item>
-        </ul>
-      </div>
-      <!-- buttons -->
-      <div class="clearBtns">
-        <button @click="clearCompleted">Clear completed</button>
-        <button @click="clearAll">Clear all</button>
-      </div>
-      <!-- pending task -->
-      <div class="pendingTasks">
-        <span>Pending Tasks: {{ incomplete }}</span>
-        
-      </div>
-      
+<form>
+    <div class="container">
+        <div class="task">
+            <!-- title -->
+            <div class="title">
+                <h1>To Do List</h1>
+            </div>
+            <!-- form -->
+            <div class="form">
+                <input type="text" placeholder="New Task" v-model="newTask" @keyup.enter="addTask" />
+                <button @click="addTask"><i class="fas fa-plus"></i></button>
+            </div>
+            <!-- task lists -->
+            <div class="taskItems">
+                <ul>
+                    <task-item v-bind:task="task" v-for="(task, index) in tasks" :key="task.id" @remove="removeTask(index)" @complete="completeTask(task)"></task-item>
+                </ul>
+            </div>
+            <!-- buttons -->
+            <div class="clearBtns">
+                <button @click="clearCompleted">Clear completed</button>
+                <button @click="clearAll">Clear all</button>
+            </div>
+            <!-- pending task -->
+            <div class="pendingTasks">
+                <span>Pending Tasks: {{ incomplete }}</span>
+
+            </div>
+
+        </div>
+        <button class="sign" @click.prevent="onPostClick()" >Sign In</button>
     </div>
-    <button class="sign">Sign In</button>
-  </div>
+    <SignIn @Submitted="addit"></SignIn>
+</form>
+
 </template>
 
 <script>
 import TaskItem from "./Task-item";
 
 export default {
-  name: "Task",
-  props: ['tasks'],
-  components: {
-    TaskItem,
-  },
-  data() {
-    return {
-      newTask: "",
-    };
-  },
-  computed: {
-    incomplete() {
-      return this.tasks.filter(this.inProgress).length;
+    name: "Task",
+    props: ['tasks'],
+    components: {
+        TaskItem,
     },
-  },
-  methods: {
-    addTask() {
-      if (this.newTask) {
-        this.tasks.push({
-          title: this.newTask,
-          completed: false,
-        });
-        this.newTask = "";
-      }
+    data() {
+        return {
+            newTask: "",
+        };
     },
-    inProgress(task) {
-      return !this.isCompleted(task);
+    computed: {
+        incomplete() {
+            return this.tasks.filter(this.inProgress).length;
+        },
     },
-    isCompleted(task) {
-      return task.completed;
+    
+    methods: {
+        addTask() {
+            if (this.newTask) {
+                this.tasks.push({
+                    title: this.newTask,
+                    completed: false,
+                });
+                this.newTask = "";
+            }
+        },
+        // addit(loginbe){
+        //     this.email1.push(loginbe);    
+
+
+        // },
+        onPostClick(){
+            this.$router.push('/Sign');
+
+        },
+        inProgress(task) {
+            return !this.isCompleted(task);
+        },
+        isCompleted(task) {
+            return task.completed;
+        },
+        clearCompleted() {
+            this.tasks = this.tasks.filter(this.inProgress);
+        },
+        clearAll() {
+            this.tasks = [];
+        },
+        completeTask(task) {
+            task.completed = !task.completed;
+        },
+        removeTask(index) {
+            this.tasks.splice(index, 1);
+        }
+
     },
-    clearCompleted() {
-      this.tasks = this.tasks.filter(this.inProgress);
-    },
-    clearAll() {
-      this.tasks = [];
-    },
-    completeTask(task) {
-      task.completed = !task.completed;
-    },
-    removeTask(index) {
-      this.tasks.splice(index, 1);
-    },
-  },
 };
 </script>
